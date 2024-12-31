@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi-container
+    image: fastapi-basic  # Definimos el nombre de la imagen
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app  # Sincroniza el código fuente entre el contenedor y tu máquina
+    environment:
+      - PYTHONUNBUFFERED=1  # Evita que los logs de Python se buffericen
+    restart: always  # Reinicia el contenedor si falla

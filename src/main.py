@@ -14,7 +14,7 @@ def read_item(item_id: int, query_param: str = None):
     return {"item_id": item_id, "query_param": query_param}
 
 def run_server():
-    uvicorn.run("main:app", host="127.0.0.1", port=PORT, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=PORT, reload=True)
 
 
 
