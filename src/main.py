@@ -92,10 +92,9 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 @app.post("/token/refresh")
 async def refresh_token(request: RefreshTokenRequest):
-    refresh_token = request.refresh_token
     try:
         # Decodificar y validar el Refresh Token
-        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(request.refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
             raise HTTPException(status_code=401, detail="Invalid token")
