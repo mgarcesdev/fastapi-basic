@@ -1,1 +1,1 @@
-from tasks.tasks_router import router
+from tasks.tasks_router import setup_route

@@ -1,12 +1,9 @@
 from datetime import datetime
 
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy.orm import declarative_base
 
-DATABASE_URL = "sqlite:///./temp/task_database.db"
 Base = declarative_base()
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 class Task(Base):

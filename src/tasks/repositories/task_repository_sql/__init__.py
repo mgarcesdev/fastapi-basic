@@ -2,15 +2,18 @@ from datetime import datetime
 from typing import Optional, List
 
 from fastapi import HTTPException
+from sqlalchemy import Engine
+from sqlalchemy.orm import sessionmaker
 
-from tasks.models import SessionLocal, Task
 from tasks.repositories import TaskRepositoryInterface
+from tasks.repositories.task_repository_sql.task_model_orm import Task
 from tasks.schemas import TaskOut, TaskCreate, TaskUpdate
 
 
 class TaskRepositorySql(TaskRepositoryInterface):
-    def __init__(self):
-        self.db = SessionLocal()
+    def __init__(self, engine: Engine):
+        self.sessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+        self.db = self.sessionLocal()
 
     def get_task(self, task_id: str) -> Optional[TaskOut]:
         task = self.db.query(Task).filter(Task.id == int(task_id)).first()

@@ -2,26 +2,27 @@ import uvicorn
 from fastapi import FastAPI
 
 from config import Config
-from tasks import router as tasks_router
-
-# Puerto del Servicio
-PORT = 8001
-
-# Inicializamos la app
-app = FastAPI(
-    title="Tasks API",
-    description="API para gestionar tareas",
-    version="0.1.0",
-    docs_url="/",
-)
-
-# Montamos el router con las rutas de tasks
-app.include_router(tasks_router)
+from dependencies import initialize_dependencies
+from tasks import setup_route
 
 
 def run_server():
+    # Puerto del Servicio
     config = Config()
-    uvicorn.run(app, host="127.0.0.1", port=config.PORT, reload=config.DEBUG)
+
+    # Inicializamos la app
+    app = FastAPI(
+        title="Tasks API",
+        description="API para gestionar tareas",
+        version=config.VERSION,
+        docs_url="/",
+    )
+
+    dependencies = initialize_dependencies(config)
+    tasks_router = setup_route(dependencies["task_controller"])
+    app.include_router(tasks_router)
+
+    uvicorn.run(app, host="0.0.0.0", port=config.PORT, reload=config.DEBUG)
 
 
 if __name__ == "__main__":

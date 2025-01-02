@@ -12,6 +12,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiamos el código de la aplicación desde /src al contenedor
 COPY ./src /app
 
+# Add VERSION file
+COPY VERSION /app/VERSION
+
+
 # Exponemos el puerto en el que se ejecutará Uvicorn
 EXPOSE 8000
 

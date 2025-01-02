@@ -1,14 +1,25 @@
+# Instalar dependencias
 install:
 	pip install -r requirements.txt
 
 # Nombre de la imagen
 IMAGE_NAME=fastapi-basic
 DOCKER_USER=mgarcesdev
+
+# Seleccionar la versión: `latest` o la versión desde el archivo `config.py` o `VERSION` desde .env
+VERSION ?= $(shell cat VERSION)  # Obtén la versión desde un archivo VERSION si está presente
 TAG=latest
 
-# Comando para construir la imagen
-build:
-	docker-compose build
+# Comando para construir la imagen con la versión `latest`
+build-latest:
+	docker build -t $(DOCKER_USER)/$(IMAGE_NAME):latest .
+
+# Comando para construir la imagen con la versión especificada
+build-version:
+	docker build -t $(DOCKER_USER)/$(IMAGE_NAME):$(VERSION) .
+
+# Comando para construir ambas versiones: `latest` y la versión especificada
+build: build-latest build-version
 
 # Comando para ejecutar los contenedores en segundo plano
 up:
@@ -35,11 +46,13 @@ exec:
 
 # Comando para etiquetar la imagen para Docker Hub
 tag:
-	docker tag $(IMAGE_NAME) $(DOCKER_USER)/$(IMAGE_NAME):$(TAG)
+	docker tag $(IMAGE_NAME):$(VERSION) $(DOCKER_USER)/$(IMAGE_NAME):$(VERSION)
+	docker tag $(IMAGE_NAME):$(VERSION) $(DOCKER_USER)/$(IMAGE_NAME):latest
 
 # Comando para subir la imagen a Docker Hub
 push: tag
-	docker push $(DOCKER_USER)/$(IMAGE_NAME):$(TAG)
+	docker push $(DOCKER_USER)/$(IMAGE_NAME):$(VERSION)
+	docker push $(DOCKER_USER)/$(IMAGE_NAME):latest
 
 # Comando para construir, etiquetar y subir la imagen a Docker Hub
 build-push: build tag push
